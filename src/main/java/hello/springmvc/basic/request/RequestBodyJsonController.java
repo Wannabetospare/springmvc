@@ -24,6 +24,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Controller
 public class RequestBodyJsonController {
+
+    // 문자로 된 JSON 데이터를 Jackson 라이브러리인 objectMapper 를 사용해서 자바 객체로 변환한다.
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/request-body-json-v1")
@@ -46,23 +48,22 @@ public class RequestBodyJsonController {
      * - 메시지 바디 정보 직접 반환(view 조회X)
      * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      */
-    @ResponseBody
+    @ResponseBody // 메시지 바디 정보 직접 반환(view 조회X)
     @PostMapping("/request-body-json-v2")
-    public String requestBodyJsonV2(@RequestBody String messageBody) throws
-            IOException {
+    public String requestBodyJsonV2(@RequestBody String messageBody) throws IOException {
         HelloData data = objectMapper.readValue(messageBody, HelloData.class);
         log.info("username={}, age={}", data.getUsername(), data.getAge());
         return "ok";
     }
 
     /**
-     * @RequestBody 생략 불가능(@ModelAttribute 가 적용되어 버림)
-     * HttpMessageConverter 사용 -> MappingJackson2HttpMessageConverter (content-
-     * type: application/json)
+     * @RequestBody 생략 불가능 -> @ModelAttribute 가 적용되어 버림
+     * HttpMessageConverter 사용 -> MappingJackson2HttpMessageConverter (content-type: application/json)
      */
     @ResponseBody
     @PostMapping("/request-body-json-v3")
     public String requestBodyJsonV3(@RequestBody HelloData data) {
+        // @RequestBody 를 사용하면 HTTP 메시지 컨버터가 HTTP 메시지 바디의 내용을 우리가 원하는 문자나 객체 등으로 변환해준다.
         log.info("username={}, age={}", data.getUsername(), data.getAge());
         return "ok";
     }
@@ -89,6 +90,13 @@ public class RequestBodyJsonController {
         log.info("username={}, age={}", data.getUsername(), data.getAge());
         return data;
     }
+
+   /*
+
+   @ResponseBody 응답 -> 객체 HTTP 메시지 컨버터 JSON 응답
+   @RequestBody 요청 -> JSON 요청 HTTP 메시지 컨버터 객체
+
+    */
 
 
 }

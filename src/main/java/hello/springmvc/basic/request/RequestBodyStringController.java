@@ -3,8 +3,6 @@ package hello.springmvc.basic.request;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +27,8 @@ public class RequestBodyStringController {
         ServletInputStream inputStream = request.getInputStream();
         String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
 
-        log.info("messageBody={}", messageBody);
-        response.getWriter().write("ok");
+        log.info("messageBody={}", messageBody); // 요청 값
+        response.getWriter().write("ok"); // 응답 값
 
     }
 
@@ -39,8 +37,7 @@ public class RequestBodyStringController {
      * * OutputStream(Writer): HTTP 응답 메시지의 바디에 직접 결과 출력
      */
     @PostMapping("/request-body-string-v2")
-    public void requestBodyStringV2(InputStream inputStream, Writer responseWriter)
-            throws IOException {
+    public void requestBodyStringV2(InputStream inputStream, Writer responseWriter) throws IOException {
         String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
         log.info("messageBody={}", messageBody);
         responseWriter.write("ok");
@@ -52,7 +49,6 @@ public class RequestBodyStringController {
      * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      * - 응답에서도 HttpEntity 사용 가능
      * - 메시지 바디정보 직접반환(view 조회X)
-     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      */
     @PostMapping("/request-body-string-v3")
     public HttpEntity<String> requestBodyStringV3(HttpEntity<String> httpEntity) {
@@ -67,9 +63,10 @@ public class RequestBodyStringController {
      * @ResponseBody - 메시지 바디 정보 직접 반환(view 조회X)
      * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      */
-    @ResponseBody
+    @ResponseBody // 이것은 리턴 값
     @PostMapping("/request-body-string-v4")
     public String requestBodyStringV4(@RequestBody String messageBody) {
+        // @RequestBody 를 사용하면 HTTP 메시지 바디 정보를 편리하게 조회할 수 있다.
         log.info("messageBody={}", messageBody);
         return "ok";
     }

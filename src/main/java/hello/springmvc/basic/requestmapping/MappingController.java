@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.print.attribute.standard.Media;
 import java.awt.*;
 
+
+// 반환 값으로 뷰를 찾는 것이 아니라, HTTP 메시지 바디에 바로 입력한다.
 @RestController
 public class MappingController {
 
+
+    // 로그 생성자 생성
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -21,14 +25,15 @@ public class MappingController {
      * HTTP 메서드 모두 허용 GET, HEAD, POST, PUT, PATCH, DELETE
      */
     @RequestMapping("/hello-basic")
-    public String helloBasic(){
+    public String helloBasic() {
         log.info("hello");
         return "OK";
     }
 
     /**
      * method 특정 HTTP 메서드 요청만 허용
-     * GET, HEAD, POST, PUT, PATCH, DELETE */
+     * GET, HEAD, POST, PUT, PATCH, DELETE
+     */
     @RequestMapping(value = "/mapping-get-v1", method = RequestMethod.GET)
     public String mappingGetV1() {
         log.info("mappingGetV1");
@@ -37,6 +42,7 @@ public class MappingController {
 
     /**
      * 편리한 축약 애노테이션 (코드보기) * @GetMapping
+     *
      * @PostMapping
      * @PutMapping
      * @DeleteMapping
@@ -52,7 +58,9 @@ public class MappingController {
     /**
      * PathVariable 사용
      * 변수명이 같으면 생략 가능
-     * @PathVariable("userId") String userId -> @PathVariable userId */
+     *
+     * @PathVariable("userId") String userId -> @PathVariable userId
+     */
     @GetMapping("/mapping/{userId}")
     public String mappingPath(@PathVariable("userId") String data) {
         log.info("mappingPath userId={}", data);
@@ -84,7 +92,7 @@ public class MappingController {
     }
 
     /**
-     *특정 헤더로 추가 매핑
+     * 특정 헤더로 추가 매핑
      * headers="mode",
      * headers="!mode"
      * headers="mode=debug"
@@ -97,19 +105,19 @@ public class MappingController {
     }
 
 
-/**
- * Content-Type 헤더 기반 추가 매핑 Media Type
- *  consumes="application/json"
- * consumes="!application/json"
- * consumes="application/*"
- * consumes="*\/*"
- * MediaType.APPLICATION_JSON_VALUE
- */
-@PostMapping(value = "/mapping-consume", consumes = MediaType.APPLICATION_JSON_VALUE)
-public String mappingConsumes() {
-    log.info("mappingConsumes");
-    return "ok";
-}
+    /**
+     * Content-Type 헤더 기반 추가 매핑 Media Type
+     * consumes="application/json"
+     * consumes="!application/json"
+     * consumes="application/*"
+     * consumes="*\/*"
+     * MediaType.APPLICATION_JSON_VALUE
+     */
+    @PostMapping(value = "/mapping-consume", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String mappingConsumes() {
+        log.info("mappingConsumes");
+        return "ok";
+    }
 
 
     /**
@@ -124,5 +132,4 @@ public String mappingConsumes() {
     }
 
 
-    
 }

@@ -20,6 +20,7 @@ public class RequestParamController {
 
 
     // 반환 타입이 없으면서 이렇게 응답에 값을 직접 집어넣으면, view 조회X
+    // url에 파라미터를 입력해서 요 - 주로 검색할 때 사용됨
     @RequestMapping("/request-param-v1")
     public void requestParamV1(HttpServletRequest request, HttpServletResponse
             response) throws IOException {
@@ -36,9 +37,10 @@ public class RequestParamController {
      * @ResponseBody 추가
      * - View 조회를 무시하고, HTTP message body에 직접 해당 내용 입력
      */
-    @ResponseBody
+    @ResponseBody // View 조회를 무시하고, HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-v2")
     public String requestParamV2(
+            // 파라미터 이름으로 바인딩- @RequestParam
             @RequestParam("username") String memberName,
             @RequestParam("age") int memberAge) {
         log.info("username={}, age={}", memberName, memberAge);
@@ -52,6 +54,7 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/request-param-v3")
     public String requestParamV3(
+            // HTTP 파라미터 이름이 변수 이름과 같으면 @RequestParam(name="xx") 생략 가능
             @RequestParam String username,
             @RequestParam int age) {
         log.info("username={}, age={}", username, age);
@@ -66,6 +69,7 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/request-param-v4")
     public String requestParamV4(String username, int age) {
+        // String, int 등의 단순 타입이면 @RequestParam 도 생략 가능
         log.info("username={}, age={}", username, age);
         return "ok";
     }
@@ -82,8 +86,8 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/request-param-required")
     public String requestParamRequired(
-            @RequestParam(required = true) String username,
-            @RequestParam(required = false) Integer age) {
+            @RequestParam(required = true) String username, // 기본값이 true 이며 필수값 이다.
+            @RequestParam(required = false) Integer age) { // false 이면 필수값은 아니다, null을 int에 입력하는 것은 불가능
         log.info("username={}, age={}", username, age);
         return "ok";
     }
@@ -96,8 +100,8 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/request-param-default")
     public String requestParamDefault(
-            @RequestParam(required = true, defaultValue = "guest") String username,
-            @RequestParam(required = false, defaultValue = "-1") int age) {
+            @RequestParam(required = true, defaultValue = "guest") String username, // 값이 없을시 넣을 정보 추가
+            @RequestParam(required = false, defaultValue = "-1") int age) { // 값이 없을시 넣을 정보 추가
         log.info("username={}, age={}", username, age);
         return "ok";
     }
